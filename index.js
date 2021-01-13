@@ -99,9 +99,9 @@ const changeHeroImg = () => {
   return () => clearInterval(imgChangeHandler);
 }
 
-const replaceTweetData = (text, id_str, display_url, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count, type, video_url) => {
+const replaceTweetData = (text, id_str, display_url, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count, type, video_url, tweet_url) => {
   let tweetHtmlWithIMG = `
-  <div class="tweet-card-wrapper">
+  <div class="tweet-card-wrapper" ">
    <div class="content">
     <p class="tweet-text">${text}</p>
     <img src=${display_url} alt="" class="tweet-media" />
@@ -219,14 +219,15 @@ function tweetTimeline() {
       tweets = await response.json()
       console.log(tweets)
       tweets.map(data => {
-
+        
+        let tweet_url="";
         let { text, id_str, in_reply_to_screen_name, favorite_count, retweet_count, type, media_url_https, video_info, video_url } = extractData(data);
 
 
         let { id, name, screen_name, profile_image_url_https } = data.user;
 
         if (!in_reply_to_screen_name) {
-          text = linkify(text);
+          text = linkify(text, tweet_url);
           text = hashtagify(text)
           replaceTweetData(
             text,
@@ -239,7 +240,8 @@ function tweetTimeline() {
             favorite_count,
             retweet_count,
             type,
-            video_url
+            video_url,
+            tweet_url
           )
 
         }
@@ -247,18 +249,14 @@ function tweetTimeline() {
 
       resizeAllGridItems();
       window.addEventListener("resize", resizeAllGridItems);
-      // let allItems = document.getElementsByClassName("tweet-card-wrapper");
-      // for (let x = 0; x < allItems.length; x++) {
-      //   imagesLoaded(allItems[x], resizeInstance);
-      // }
-
     })
     .catch(err => console.log(err))
 }
 
-function linkify(text) {
+function linkify(text, tweet_url) {
   let urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(urlRegex, function (url) {
+    tweet_url = url
     return '<a class="tweet-link" href="' + url + '" target="_blank">' + url + '</a>';
   });
 }
@@ -268,7 +266,7 @@ function hashtagify(text) {
   return text.replace(urlRegex, (hashTag) => {
     // console.log(typeof hashTag)
     let tag = `${hashTag}`;
-    // tag = tag.slice(1)
+    tag = tag.slice(1)
     // console.log(tag.slice(1))
     return `<a href="https://twitter.com/search?q=%23${tag.slice(1)}" target="_blank" class="hashtag">${hashTag}</a>`;
   })
