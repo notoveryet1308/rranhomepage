@@ -63,7 +63,7 @@ const precacheImages = (wrapper) => {
     })
     wrapper.style.backgroundImage = `url(${images[0].src})`
   }
-  if (screenSize <= 980) {
+  if ((600 < screenSize) && (screenSize < 1336)) {
 
     coverImages["980"].map(data => {
       let cvImg = new Image();
@@ -72,7 +72,7 @@ const precacheImages = (wrapper) => {
     })
     wrapper.style.backgroundImage = `url(${images[0].src})`
   }
-  if (screenSize <= 1366) {
+  if (screenSize >= 1366) {
 
     coverImages["1366"].map(data => {
       let cvImg = new Image();
@@ -99,11 +99,12 @@ const changeHeroImg = () => {
   return () => clearInterval(imgChangeHandler);
 }
 
-const replaceTweetData = (text, id_str, display_url, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count) => {
-  let tweetHtml = `
+const replaceTweetData = (text, id_str, display_url, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count, type, video_url) => {
+  let tweetHtmlWithIMG = `
   <div class="tweet-card-wrapper">
+   <div class="content">
     <p class="tweet-text">${text}</p>
-    <img src="${display_url}" alt="" class="tweet-media" />
+    <img src=${display_url} alt="" class="tweet-media" />
     <div class="profile">
       <img src="${profile_image_url_https}" alt="" class="profile-img" />
       <div class="profile-info">
@@ -112,20 +113,98 @@ const replaceTweetData = (text, id_str, display_url, profile_image_url_https, na
       </div>
     </div>
     <div class="tweet-action-btn-box">
+      <div class="action-btns">
       <a href="https://twitter.com/intent/tweet?in_reply_to=${id_str}" target="_blank" title="reply">
-        <i class="fas fa-reply"></i>
+        <i class="ph-arrow-bend-down-left"></i>
       </a>
       <a href="https://twitter.com/intent/retweet?tweet_id=${id_str}" target="_blank" title="retweet">      
-        <i class="fas fa-retweet"></i> ${retweet_count}
+        <i class="ph-repeat"></i> <span class="number">${retweet_count}</span>
       </a>
       <a href="https://twitter.com/intent/favorite?tweet_id=${id_str}" target="_blank" title="like">
-        <i class="far fa-heart"></i> ${favorite_count}
+        <i class="ph-heart"></i> <span class="number">${favorite_count}</span>
       </a>
+      </div>
+      <div class="twitter-logo">
+        <i class="ph-twitter-logo-fill"></i>
+      </div>
+    </div>
+    </div>
+  </div>`
+
+  let tweetHtmlWithVIDEO = `
+  <div class="tweet-card-wrapper">
+   <div class="content">
+    <p class="tweet-text">${text}</p>
+    <video src=${video_url} type='video/mp4' controls></video>
+    <div class="profile">
+      <img src="${profile_image_url_https}" alt="" class="profile-img" />
+      <div class="profile-info">
+        <h3 class="name">${name}</h3>
+        <h4 class="screen-name">@${screen_name}</h4>
+      </div>
+    </div>
+    <div class="tweet-action-btn-box">
+      <div class="action-btns">
+      <a href="https://twitter.com/intent/tweet?in_reply_to=${id_str}" target="_blank" title="reply">
+        <i class="ph-arrow-bend-down-left"></i>
+      </a>
+      <a href="https://twitter.com/intent/retweet?tweet_id=${id_str}" target="_blank" title="retweet">      
+        <i class="ph-repeat"></i> <span class="number">${retweet_count}</span>
+      </a>
+      <a href="https://twitter.com/intent/favorite?tweet_id=${id_str}" target="_blank" title="like">
+        <i class="ph-heart"></i> <span class="number">${favorite_count}</span>
+      </a>
+      </div>
+      <div class="twitter-logo">
+        <i class="ph-twitter-logo-fill"></i>
+      </div>
+    </div>
     </div>
   </div>`
 
 
-  tweetSection.insertAdjacentHTML('beforeend', tweetHtml)
+  let tweetHtml =  `
+  <div class="tweet-card-wrapper">
+   <div class="content">
+    <p class="tweet-text">${text}</p>
+    <div class="profile">
+      <img src="${profile_image_url_https}" alt="" class="profile-img" />
+      
+      <div class="profile-info">
+        <h3 class="name">${name}</h3>
+        <h4 class="screen-name">@${screen_name}</h4>
+      </div>
+    </div>
+    <div class="tweet-action-btn-box">
+    <div class="action-btns">
+      <a href="https://twitter.com/intent/tweet?in_reply_to=${id_str}" target="_blank" title="reply">
+        <i class="ph-arrow-bend-down-left"></i>
+      </a>
+      <a href="https://twitter.com/intent/retweet?tweet_id=${id_str}" target="_blank" title="retweet">      
+        <i class="ph-repeat"></i> <span class="number">${retweet_count}</span>
+      </a>
+      <a href="https://twitter.com/intent/favorite?tweet_id=${id_str}" target="_blank" title="like">
+        <i class="ph-heart"></i> <span class="number">${favorite_count}</span>
+      </a>
+      </div>
+      <div class="twitter-logo">
+        <i class="ph-twitter-logo-fill"></i>
+      </div>
+    </div>
+    </div>
+  </div>`
+
+
+  if (type === "video") {
+    tweetSection.insertAdjacentHTML('beforeend', tweetHtmlWithVIDEO)
+  }
+  if (type == "photo") {
+    tweetSection.insertAdjacentHTML('beforeend', tweetHtmlWithIMG)
+  }
+
+  if (!display_url) {
+    tweetSection.insertAdjacentHTML('beforeend', tweetHtml)
+  }
 }
 
 const LOCAL_URL = "http://localhost:8080/api/twitter/users-timeline"
@@ -135,30 +214,112 @@ function tweetTimeline() {
   const tweetSection = document.querySelector(".tweet-section");
 
   let tweets = "";
-  fetch(LOCAL_URL)
+  fetch(HOSTED_URL)
     .then(async response => {
       tweets = await response.json()
       console.log(tweets)
       tweets.map(data => {
-        let { text, id_str, in_reply_to_screen_name, favorite_count, retweet_count } = data;
-        const media_url_https = data.entities.media && data.entities.media[0].media_url_https;
-        // console.log(media_url_https)
-        const { id, name, screen_name, profile_image_url_https } = data.user;
+
+        let { text, id_str, in_reply_to_screen_name, favorite_count, retweet_count, type, media_url_https, video_info, video_url } = extractData(data);
+
+
+        let { id, name, screen_name, profile_image_url_https } = data.user;
+
         if (!in_reply_to_screen_name) {
           text = linkify(text);
-          replaceTweetData(text, id_str, media_url_https, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count)
+          text = hashtagify(text)
+          replaceTweetData(
+            text,
+            id_str,
+            media_url_https,
+            profile_image_url_https,
+            name,
+            screen_name,
+            tweetSection,
+            favorite_count,
+            retweet_count,
+            type,
+            video_url
+          )
 
         }
       })
 
+      resizeAllGridItems();
+      window.addEventListener("resize", resizeAllGridItems);
+      // let allItems = document.getElementsByClassName("tweet-card-wrapper");
+      // for (let x = 0; x < allItems.length; x++) {
+      //   imagesLoaded(allItems[x], resizeInstance);
+      // }
+
     })
+    .catch(err => console.log(err))
 }
 
 function linkify(text) {
-    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(urlRegex, function(url) {
-        return '<a href="' + url + '" target="_blank">' + url + '</a>';
-    });
+  let urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  return text.replace(urlRegex, function (url) {
+    return '<a class="tweet-link" href="' + url + '" target="_blank">' + url + '</a>';
+  });
+}
+
+function hashtagify(text) {
+  let urlRegex = /(^|\s)(#[a-z\d-]+)/ig;
+  return text.replace(urlRegex, (hashTag) => {
+    // console.log(typeof hashTag)
+    let tag = `${hashTag}`;
+    // tag = tag.slice(1)
+    // console.log(tag.slice(1))
+    return `<a href="https://twitter.com/search?q=%23${tag.slice(1)}" target="_blank" class="hashtag">${hashTag}</a>`;
+  })
+}
+
+function extractData(data) {
+  let { text, id_str, in_reply_to_screen_name, favorite_count, retweet_count } = data;
+  const { id, name, screen_name, profile_image_url_https } = data.user;
+
+  let video_info = "";
+  let type = "";
+  let media_url_https = "";
+  let video_url = "";
+
+  if (data.extended_entities) {
+    video_info = data.extended_entities.media["0"].video_info;
+    media_url_https = data.extended_entities.media["0"].media_url_https;
+    type = data.extended_entities.media["0"].type;
+  }
+
+  if (video_info) {
+    video_url = video_info.variants[0].url;
+  }
+
+  return { text, id_str, in_reply_to_screen_name, favorite_count, retweet_count, video_info, type, media_url_https, video_info, video_url };
+
+}
+
+function resizeGridItem(item) {
+  let grid = document.getElementsByClassName("grid")[0];
+  let rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+  let rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
+  let rowSpan = Math.ceil((item.querySelector('.content').getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
+
+  item.style.gridRowEnd = "span " + rowSpan;
+}
+
+function resizeAllGridItems() {
+
+  let tweetCards = document.getElementsByClassName("tweet-card-wrapper");
+
+  let x;
+  for (x = 0; x < tweetCards.length; x++) {
+    resizeGridItem(tweetCards[x]);
+  }
+
+}
+
+function resizeInstance(instance) {
+  let item = instance.elements[0];
+  resizeGridItem(item);
 }
 
 init();
