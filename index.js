@@ -38,15 +38,15 @@ const workDisplay = document.querySelector(".work-section--content--display");
 function init() {
   // console.log(":inner width ", window.innerWidth)
   if (window.innerWidth <= 1200) {
-    workSection.style.height = `${workTitle.clientHeight + workDisplay.clientHeight + 500}px`;
+    workSection.style.height = `${workTitle.clientHeight + workDisplay.clientHeight + 550}px`;
   } else {
-    workSection.style.height = "100vh"
+    workSection.style.height = "592px"
   }
 }
 
 window.addEventListener('resize', () => {
   if (window.innerWidth <= 1200) {
-    workSection.style.height = `${workTitle.clientHeight + workDisplay.clientHeight + 500}px`;
+    workSection.style.height = `${workTitle.clientHeight + workDisplay.clientHeight + 550}px`;
   } else {
     workSection.style.height = "100vh"
   }
@@ -100,76 +100,22 @@ const changeHeroImg = () => {
 }
 
 const replaceTweetData = (text, id_str, display_url, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count, type, video_url, tweet_url) => {
-  let tweetHtmlWithIMG = `
-  <div class="tweet-card-wrapper" ">
-   <div class="content">
-    <p class="tweet-text">${text}</p>
-    <img src=${display_url} alt="" class="tweet-media" />
-    <div class="profile">
-      <img src="${profile_image_url_https}" alt="" class="profile-img" />
-      <div class="profile-info">
-        <h3 class="name">${name}</h3>
-        <h4 class="screen-name">@${screen_name}</h4>
-      </div>
-    </div>
-    <div class="tweet-action-btn-box">
-      <div class="action-btns">
-      <a href="https://twitter.com/intent/tweet?in_reply_to=${id_str}" target="_blank" title="reply">
-        <i class="ph-arrow-bend-down-left"></i>
-      </a>
-      <a href="https://twitter.com/intent/retweet?tweet_id=${id_str}" target="_blank" title="retweet">      
-        <i class="ph-repeat"></i> <span class="number">${retweet_count}</span>
-      </a>
-      <a href="https://twitter.com/intent/favorite?tweet_id=${id_str}" target="_blank" title="like">
-        <i class="ph-heart"></i> <span class="number">${favorite_count}</span>
-      </a>
-      </div>
-      <div class="twitter-logo">
-        <i class="ph-twitter-logo-fill"></i>
-      </div>
-    </div>
-    </div>
-  </div>`
 
-  let tweetHtmlWithVIDEO = `
-  <div class="tweet-card-wrapper">
-   <div class="content">
-    <p class="tweet-text">${text}</p>
-    <video src=${video_url} type='video/mp4' controls></video>
-    <div class="profile">
-      <img src="${profile_image_url_https}" alt="" class="profile-img" />
-      <div class="profile-info">
-        <h3 class="name">${name}</h3>
-        <h4 class="screen-name">@${screen_name}</h4>
-      </div>
-    </div>
-    <div class="tweet-action-btn-box">
-      <div class="action-btns">
-      <a href="https://twitter.com/intent/tweet?in_reply_to=${id_str}" target="_blank" title="reply">
-        <i class="ph-arrow-bend-down-left"></i>
-      </a>
-      <a href="https://twitter.com/intent/retweet?tweet_id=${id_str}" target="_blank" title="retweet">      
-        <i class="ph-repeat"></i> <span class="number">${retweet_count}</span>
-      </a>
-      <a href="https://twitter.com/intent/favorite?tweet_id=${id_str}" target="_blank" title="like">
-        <i class="ph-heart"></i> <span class="number">${favorite_count}</span>
-      </a>
-      </div>
-      <div class="twitter-logo">
-        <i class="ph-twitter-logo-fill"></i>
-      </div>
-    </div>
-    </div>
-  </div>`
+  let media = "";
 
-
+  if(type === "photo"){
+    media = ` <img src=${display_url} alt="" class="tweet-media" />`
+  }else if(type === "video"){
+    media = `<video src=${video_url} type='video/mp4' controls></video>`
+  }
+  
   let tweetHtml =  `
   <div class="tweet-card-wrapper">
    <div class="content">
     <p class="tweet-text">${text}</p>
+    ${media}
     <div class="profile">
       <img src="${profile_image_url_https}" alt="" class="profile-img" />
-      
       <div class="profile-info">
         <h3 class="name">${name}</h3>
         <h4 class="screen-name">@${screen_name}</h4>
@@ -194,17 +140,7 @@ const replaceTweetData = (text, id_str, display_url, profile_image_url_https, na
     </div>
   </div>`
 
-
-  if (type === "video") {
-    tweetSection.insertAdjacentHTML('beforeend', tweetHtmlWithVIDEO)
-  }
-  if (type == "photo") {
-    tweetSection.insertAdjacentHTML('beforeend', tweetHtmlWithIMG)
-  }
-
-  if (!display_url) {
-    tweetSection.insertAdjacentHTML('beforeend', tweetHtml)
-  }
+  tweetSection.insertAdjacentHTML('beforeend', tweetHtml)
 }
 
 const LOCAL_URL = "http://localhost:8080/api/twitter/users-timeline"
