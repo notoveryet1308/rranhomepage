@@ -99,17 +99,33 @@ const changeHeroImg = () => {
   return () => clearInterval(imgChangeHandler);
 }
 
+function inIframe() {
+  if (top != self) {
+    let contentHeight = document.body.clientHeight;
+    postSize(contentHeight)
+    console.log(contentHeight, "I true noWWW");
+  }
+}
+
+function postSize(height) {
+  var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
+
+  if (typeof target != "undefined" && document.body.scrollHeight) {
+    target.postMessage(height, "*");
+  }
+}
+
 const replaceTweetData = (text, id_str, display_url, profile_image_url_https, name, screen_name, tweetSection, favorite_count, retweet_count, type, video_url, tweet_url) => {
 
   let media = "";
 
-  if(type === "photo"){
+  if (type === "photo") {
     media = ` <img src=${display_url} alt="" class="tweet-media" />`
-  }else if(type === "video"){
+  } else if (type === "video") {
     media = `<video src=${video_url} type='video/mp4' controls></video>`
   }
-  
-  let tweetHtml =  `
+
+  let tweetHtml = `
   <div class="tweet-card-wrapper">
    <div class="content">
     <p class="tweet-text">${text}</p>
@@ -155,8 +171,8 @@ function tweetTimeline() {
       tweets = await response.json()
       console.log(tweets)
       tweets.map(data => {
-        
-        let tweet_url="";
+
+        let tweet_url = "";
         let { text, id_str, in_reply_to_screen_name, favorite_count, retweet_count, type, media_url_https, video_info, video_url } = extractData(data);
 
 
@@ -185,6 +201,7 @@ function tweetTimeline() {
 
       resizeAllGridItems();
       window.addEventListener("resize", resizeAllGridItems);
+      inIframe()
     })
     .catch(err => console.log(err))
 }
