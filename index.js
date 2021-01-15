@@ -48,7 +48,7 @@ window.addEventListener('resize', () => {
   if (window.innerWidth <= 1200) {
     workSection.style.height = `${workTitle.clientHeight + workDisplay.clientHeight + 550}px`;
   } else {
-    workSection.style.height = "100vh"
+    workSection.style.height = "592px"
   }
 })
 
