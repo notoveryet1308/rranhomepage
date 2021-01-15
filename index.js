@@ -103,7 +103,7 @@ function inIframe() {
   if (top != self) {
     let contentHeight = document.body.clientHeight;
     postSize(contentHeight)
-    console.log(contentHeight, "I true noWWW");
+    console.log(contentHeight, "I am true now");
   }
 }
 
@@ -265,7 +265,7 @@ function resizeAllGridItems() {
   for (x = 0; x < tweetCards.length; x++) {
     resizeGridItem(tweetCards[x]);
   }
-
+  inIframe();
 }
 
 function resizeInstance(instance) {
