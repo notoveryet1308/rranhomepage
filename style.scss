@@ -719,10 +719,19 @@ img {
     }
   }
 
+  .tweet-section-main{
+    .title-d{
+      margin-bottom: 0px;
+    }
+    .tweet-section{
+      margin-bottom: 0;
+    }
+  }
+
   .title,
   .title-d,
   .title-m {
-    margin-bottom: 0;
+    margin-bottom: 0px;
   }
 }
 
