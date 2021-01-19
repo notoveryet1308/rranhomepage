@@ -63,16 +63,16 @@ const precacheImages = (wrapper) => {
     })
     wrapper.style.backgroundImage = `url(${images[0].src})`
   }
-  if ((600 < screenSize) && (screenSize < 1336)) {
+  // if ((600 < screenSize) && (screenSize < 1336)) {
 
-    coverImages["980"].map(data => {
-      let cvImg = new Image();
-      cvImg.src = data;
-      images.push(cvImg)
-    })
-    wrapper.style.backgroundImage = `url(${images[0].src})`
-  }
-  if (screenSize >= 1366) {
+  //   coverImages["980"].map(data => {
+  //     let cvImg = new Image();
+  //     cvImg.src = data;
+  //     images.push(cvImg)
+  //   })
+  //   wrapper.style.backgroundImage = `url(${images[0].src})`
+  // }
+  if (screenSize > 600) {
 
     coverImages["1366"].map(data => {
       let cvImg = new Image();
