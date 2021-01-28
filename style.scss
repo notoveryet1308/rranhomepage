@@ -297,17 +297,17 @@ img {
     .service-display {
       width: 100%;
       display: grid;
-
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      // flex-wrap: wrap;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       grid-gap: 40px;
       .service-card {
-        width: 100%;
+        // width: 280px;
         height: 380px;
         position: relative;
 
         // perspective: 25rem;
-        // margin-bottom: 15px;
-        // margin-right: 15px;
+        // margin-bottom: 40px;
+        // margin-right: 40px;
         .card__side {
           position: absolute;
           top: 0;
