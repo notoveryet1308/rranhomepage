@@ -8,6 +8,11 @@ const coverImages = {
     "./assets/coverImg/rranhome_4_600_205.png",
     "./assets/coverImg/rranhome_5_600_205.png",
     "./assets/coverImg/rranhome_6_600_205.png",
+    "./assets/coverImg/rranhome_7_600_205.png",
+    "./assets/coverImg/rranhome_8_600_205.png",
+    "./assets/coverImg/rranhome_9_600_205.png",
+
+
   ],
   "980": [
     "./assets/coverImg/rranhome_0_980_334.png",
@@ -17,6 +22,10 @@ const coverImages = {
     "./assets/coverImg/rranhome_4_980_334.png",
     "./assets/coverImg/rranhome_5_980_334.png",
     "./assets/coverImg/rranhome_6_980_334.png",
+    "./assets/coverImg/rranhome_7_980_334.png",
+    "./assets/coverImg/rranhome_8_980_334.png",
+    "./assets/coverImg/rranhome_9_980_334.png",
+
   ],
   "1366": [
     "./assets/coverImg/rranhome_0_1366_466.png",
@@ -26,6 +35,10 @@ const coverImages = {
     "./assets/coverImg/rranhome_4_1366_466.png",
     "./assets/coverImg/rranhome_5_1366_466.png",
     "./assets/coverImg/rranhome_6_1366_466.png",
+    "./assets/coverImg/rranhome_7_1366_466.png",
+    "./assets/coverImg/rranhome_8_1366_466.png",
+    "./assets/coverImg/rranhome_9_1366_466.png",
+
   ],
 }
 const heroBox = document.querySelector('.hero-section');
@@ -91,7 +104,7 @@ const changeHeroImg = () => {
 
   let imgChangeHandler = setInterval(() => {
 
-    if (num === 6) num = 0;
+    if (num === 9) num = 0;
     else num = num + 1;
 
     heroBox.style.backgroundImage = `url(${preCachedCoverImages[num].src})`
